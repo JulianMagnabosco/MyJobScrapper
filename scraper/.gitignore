@@ -1,0 +1,5 @@
+.env
+venv/
+_pycaches/
+__pycache__/
+spider1.py
