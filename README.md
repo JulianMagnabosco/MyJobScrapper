@@ -2,7 +2,7 @@
 
 Web Scrapper para busqueda y visualizacion de ofertas de empleos.
 
-#Tecnologias
+# Tecnologias
 - Angular
 - Scrapy
 - ScraperAPI
