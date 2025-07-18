@@ -1,0 +1,32 @@
+<div class="container">
+  <app-search-bar></app-search-bar>
+  <mat-grid-list class="grid-list" cols="2">
+    <mat-grid-tile>
+      <app-list class="list-container"></app-list>
+    </mat-grid-tile>
+    <mat-grid-tile >
+      <mat-card class="detail-card" appearance="outlined">
+        
+      @if (selectedJob) {
+        <mat-card-header>
+          <mat-card-title>{{selectedJob.title}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{selectedJob.description}}</p>
+        </mat-card-content>
+        <mat-card-footer class="example-card-footer">
+          <mat-chip-set class="job-chips">
+            <mat-chip>{{selectedJob.location}}</mat-chip>
+            <mat-chip>{{selectedJob.salary}}</mat-chip>
+            <mat-chip>{{selectedJob.type}}</mat-chip>
+          </mat-chip-set>
+        </mat-card-footer>
+      } 
+      @else {
+        <p>Select a job to see details</p>
+      }
+      </mat-card>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+</div>
