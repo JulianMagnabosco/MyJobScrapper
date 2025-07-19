@@ -1,32 +1,22 @@
-<div class="container">
+<div class="container mx-auto p-4">
   <app-search-bar></app-search-bar>
-  <mat-grid-list class="grid-list" cols="2">
-    <mat-grid-tile>
-      <app-list class="list-container"></app-list>
-    </mat-grid-tile>
-    <mat-grid-tile >
-      <mat-card class="detail-card" appearance="outlined">
-        
+  <div class="grid sm:grid-cols-2 gap-1">
+    <app-list class="not-sm:order-1 not-sm:p-1 mt-4" [jobs]="jobs()" (clickJob)="selectJob($event)"></app-list>
+    <div class="bg-white not-sm:shadow-xl shadow-gray-400 not-sm:sticky left-0 top-0 job-details border border-gray-300 p-4 rounded-lg mt-4 h-min w-full overflow-y-auto">
       @if (selectedJob) {
-        <mat-card-header>
-          <mat-card-title>{{selectedJob.title}}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>{{selectedJob.description}}</p>
-        </mat-card-content>
-        <mat-card-footer class="example-card-footer">
-          <mat-chip-set class="job-chips">
-            <mat-chip>{{selectedJob.location}}</mat-chip>
-            <mat-chip>{{selectedJob.salary}}</mat-chip>
-            <mat-chip>{{selectedJob.type}}</mat-chip>
-          </mat-chip-set>
-        </mat-card-footer>
-      } 
-      @else {
-        <p>Select a job to see details</p>
+      <h2 class="text-2xl font-bold">{{selectedJob.title}}</h2>
+      <p class="mt-2">{{selectedJob.description}}</p>
+      <div class="flex flex-wrap gap-2 mt-2">
+        <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2 py-1 rounded">{{selectedJob.location}}</span>
+        <span class="bg-green-100 text-green-800 text-sm font-semibold px-2 py-1 rounded">{{selectedJob.salary}}</span>
+        <span class="bg-yellow-100 text-yellow-800 text-sm font-semibold px-2 py-1 rounded">{{selectedJob.type}}</span>
+      </div>
       }
-      </mat-card>
-    </mat-grid-tile>
+      @else {
+      <p class="text-gray-500 mt-4">Select a job to see details.</p>
+      }
+    </div>
 
-  </mat-grid-list>
+  </div>
+
 </div>

@@ -1,16 +1,18 @@
-@for (job of jobs; track $index) {
-  <mat-card class="example-card" appearance="outlined">
-  <mat-card-header>
-    <mat-card-title>{{job.title}}</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+@for (job of jobs(); track $index) {
+  <article class="border last:mb-0 mb-1 border-gray-200 cursor-pointer p-4 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+    (click)="clickJob.emit(job)">
+    <h2 class="text-xl font-bold">{{job.title}}</h2>
     <p>{{job.description}}</p>
-  </mat-card-content>
-  <mat-card-footer class="example-card-footer">
-    <mat-chip-set >
-      <mat-chip>{{job.location}}</mat-chip>
-      <mat-chip>{{job.salary}}</mat-chip>
-    </mat-chip-set>
-  </mat-card-footer>
-</mat-card>
+    <div class="flex flex-wrap gap-2 mt-2">
+      <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-2 py-1 rounded">{{job.location}}</span>
+      <span class="bg-green-100 text-green-800 text-sm font-semibold px-2 py-1 rounded">{{job.salary}}</span>
+      <span class="bg-yellow-100 text-yellow-800 text-sm font-semibold px-2 py-1 rounded">{{job.type}}</span>
+
+    </div>
+  </article>
+}
+@empty {
+  <article class="border not-first:mb-0 mb-1 border-gray-200 cursor-pointer p-4 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+    <h2 class="text-xl font-bold">No se encontro nada.</h2>
+  </article>
 }
