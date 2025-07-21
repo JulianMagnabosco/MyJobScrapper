@@ -7,14 +7,14 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class JobService {
-  url = environment.API_URL+'/jobs'; // Replace with your actual API endpoint
+  url = environment.API_URL; // Replace with your actual API endpoint
   httpClient=inject(HttpClient);
 
   getJobs() {
-    return this.httpClient.get<Job>(this.url);
+    return this.httpClient.get<Job>(this.url+'/jobs');
   }
   
-  getJob(id: number) {
-    return this.httpClient.get<any>(this.url + '/' + id);
+  rechargeDatabase(data: any) {
+    return this.httpClient.post<any>(this.url + '/update', data);
   }
 }

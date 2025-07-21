@@ -7,6 +7,15 @@ import scrapy
 
 class JobData(scrapy.Item):
     # define the fields for your item here like:
+    url = scrapy.Field()
+    id = scrapy.Field()
     title = scrapy.Field()
     description = scrapy.Field()
+
+    company = scrapy.Field()
+    location = scrapy.Field()
+    datePosted = scrapy.Field()
+    salary = scrapy.Field()
+    
+    type = scrapy.Field()
     pass

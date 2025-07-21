@@ -6,7 +6,9 @@ import json
 from flask import Flask
 from bson.json_util import dumps, loads
 from scrapy.crawler import CrawlerRunner
-from jobscraper.spiders import spider1
+from scrapy.utils.project import get_project_settings
+from scrapy.utils.log import configure_logging
+from jobscraper.spiders import spider1,spidertest
 
 import pymongo
 
@@ -15,32 +17,34 @@ MONGO_DATABASE=os.getenv('MONGO_DATABASE', 'myDatabase')
 client = pymongo.MongoClient(MONGO_URI)
 
 app = Flask('Scrape With Flask')
-crawl_runner = CrawlerRunner()      # requires the Twisted reactor to run
-quotes_list = []                    # store quotes
+
+configure_logging()
 scrape_in_progress = False
-scrape_complete = False
 
-@app.route('/crawl')
-def crawl_for_quotes():
-    """
-    Scrape for quotes
-    """
+@app.route('/update', methods=['POST'])
+def crawl():
     global scrape_in_progress
-    global scrape_complete
 
+    response = ""
+    codeResponse = 1
     if not scrape_in_progress:
         scrape_in_progress = True
         scrape_with_crochet()
-        return 'SCRAPING'
-    elif scrape_complete:
-        return 'SCRAPE COMPLETE'
-    return 'SCRAPE IN PROGRESS'
+        response = 'SCRAPING'
+        codeResponse = 1
+    else:
+        response = 'SCRAPE IN PROGRESS'
+        codeResponse = 2
+
+    return app.response_class(
+        response=dumps({"status": response, "code": codeResponse}),
+        status=200,
+        mimetype='application/json',
+        headers={'Access-Control-Allow-Origin':'*'}
+    )
 
 @app.route('/jobs')
 def get_results():
-    """
-    Get the results only if a spider has results
-    """
     results = {"data": list(client[MONGO_DATABASE].jobs.find())}
 
     response = app.response_class(
@@ -53,16 +57,14 @@ def get_results():
 
 @crochet.run_in_reactor
 def scrape_with_crochet():
-    eventual = crawl_runner.crawl(spider1.Spider1)
+    runner = CrawlerRunner(get_project_settings())
+    eventual = runner.crawl(spidertest.Spidertest)
     eventual.addCallback(finished_scrape)
 
 def finished_scrape(null):
-    """
-    A callback that is fired after the scrape has completed.
-    Set a flag to allow display the results from /results
-    """
-    global scrape_complete
-    scrape_complete = True
+    global scrape_in_progress
+    print("Scrape finished")
+    scrape_in_progress = False
 
 if __name__=='__main__':
     app.run('0.0.0.0', 3000)
