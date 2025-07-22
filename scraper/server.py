@@ -19,7 +19,30 @@ client = pymongo.MongoClient(MONGO_URI)
 app = Flask('Scrape With Flask')
 
 configure_logging()
+settings = get_project_settings()
+settings.set("TWISTED_REACTOR", "twisted.internet.selectreactor.SelectReactor")
+    
 scrape_in_progress = False
+
+@app.route('/status', methods=['GET'])
+def crawl():
+    global scrape_in_progress
+
+    response = ""
+    codeResponse = 1
+    if not scrape_in_progress:
+        response = 'SCRAPING COMPLETE'
+        codeResponse = 1
+    else:
+        response = 'SCRAPE IN PROGRESS'
+        codeResponse = 2
+
+    return app.response_class(
+        response=dumps({"status": response, "code": codeResponse}),
+        status=200,
+        mimetype='application/json',
+        headers={'Access-Control-Allow-Origin':'*'}
+    )
 
 @app.route('/update', methods=['POST'])
 def crawl():
@@ -43,7 +66,7 @@ def crawl():
         headers={'Access-Control-Allow-Origin':'*'}
     )
 
-@app.route('/jobs')
+@app.route('/jobs', methods=['GET'])
 def get_results():
     results = {"data": list(client[MONGO_DATABASE].jobs.find())}
 
@@ -55,10 +78,10 @@ def get_results():
     )
     return response
 
-@crochet.run_in_reactor
+@crochet.wait_for(10)
 def scrape_with_crochet():
-    runner = CrawlerRunner(get_project_settings())
-    eventual = runner.crawl(spidertest.Spidertest)
+    runner = CrawlerRunner(settings=settings)
+    eventual = runner.crawl(spider1.Spider1)
     eventual.addCallback(finished_scrape)
 
 def finished_scrape(null):

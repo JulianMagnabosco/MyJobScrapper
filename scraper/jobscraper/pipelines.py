@@ -26,10 +26,17 @@ class MongoPipeline:
     def open_spider(self, spider):
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
+        self.db[self.collection_name].create_index("id", unique=True)
+
 
     def close_spider(self, spider):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db[self.collection_name].insert_one(ItemAdapter(item).asdict())
+        item = ItemAdapter(item).asdict()
+        self.db[self.collection_name].update_one(
+            {"id": item["id"]},                      # condición de existencia
+            {"$setOnInsert": item},                  # datos a insertar solo si no existe
+            upsert=True
+        )
         return item
