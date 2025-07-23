@@ -113,17 +113,18 @@ export class Search implements OnInit {
     }
   ]);
 
-  selectedJob?: Job = {
-    title: 'Titulo del trabajo',
-    company: 'comañia',
-    location: 'Remoto',
-    description: 'Descripción del trabajo, incluyendo los requisitos y responsabilidades.',
-    datePosted: new Date(),
-    url: '',
-    salary: '1000',
-    type: 'Full-time',
-    id: 0
-  }; // Variable to hold the selected job
+  selectedJob?: Job;
+  // selectedJob?: Job = {
+  //   title: 'Titulo del trabajo',
+  //   company: 'comañia',
+  //   location: 'Remoto',
+  //   description: 'Descripción del trabajo, incluyendo los requisitos y responsabilidades.',
+  //   datePosted: new Date(),
+  //   url: '',
+  //   salary: '1000',
+  //   type: 'Full-time',
+  //   id: 0
+  // }; // Variable to hold the selected job
   text = signal(''); // Signal to hold the search text
 
   service= inject(JobService);

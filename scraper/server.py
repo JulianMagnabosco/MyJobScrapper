@@ -25,7 +25,7 @@ settings.set("TWISTED_REACTOR", "twisted.internet.selectreactor.SelectReactor")
 scrape_in_progress = False
 
 @app.route('/status', methods=['GET'])
-def crawl():
+def status():
     global scrape_in_progress
 
     response = ""
@@ -44,7 +44,7 @@ def crawl():
         headers={'Access-Control-Allow-Origin':'*'}
     )
 
-@app.route('/update', methods=['POST'])
+@app.route('/crawl', methods=['POST'])
 def crawl():
     global scrape_in_progress
 
@@ -78,7 +78,7 @@ def get_results():
     )
     return response
 
-@crochet.wait_for(10)
+@crochet.run_in_reactor
 def scrape_with_crochet():
     runner = CrawlerRunner(settings=settings)
     eventual = runner.crawl(spider1.Spider1)
