@@ -4,15 +4,13 @@ import { Settings } from './components/settings/settings';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'home',
     component: Search
   },
   {
     path: 'settings',
     component: Settings
   },
-  {
-    path: '*',
-    redirectTo: ''
-  }
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: '**', redirectTo: 'home'}
 ];

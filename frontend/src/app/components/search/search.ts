@@ -12,105 +12,6 @@ import { JobService } from '../../services/job-service';
 })
 export class Search implements OnInit {
   jobs = signal<Job[]>([
-    {
-      title: 'Desarrollador Frontend',
-      company: 'Tech Solutions',
-      location: 'Madrid, España',
-      description: 'Buscamos un desarrollador frontend con experiencia en Angular y TypeScript.',
-      datePosted: new Date(),
-      url: 'https://example.com/job1',
-      salary: '3000',
-      type: 'Full-time',
-      id: 1
-    },
-    {
-      title: 'Ingeniero de Software',
-      company: 'Innovatech',
-      location: 'Barcelona, España',
-      description: 'Se requiere ingeniero de software con conocimientos en Python y Django.',
-      datePosted: new Date(),
-      url: 'https://example.com/job2',
-      salary: '3500',
-      type: 'Full-time',
-      id: 2
-    },
-    {
-      title: 'Ingeniero de Software',
-      company: 'Innovatech',
-      location: 'Barcelona, España',
-      description: 'Se requiere ingeniero de software con conocimientos en Python y Django.',
-      datePosted: new Date(),
-      url: 'https://example.com/job2',
-      salary: '3500',
-      type: 'Full-time',
-      id: 2
-    },
-    {
-      title: 'Ingeniero de Software',
-      company: 'Innovatech',
-      location: 'Barcelona, España',
-      description: 'Se requiere ingeniero de software con conocimientos en Python y Django.',
-      datePosted: new Date(),
-      url: 'https://example.com/job2',
-      salary: '3500',
-      type: 'Full-time',
-      id: 2
-    },
-    {
-      title: 'Ingeniero de Software',
-      company: 'Innovatech',
-      location: 'Barcelona, España',
-      description: 'Se requiere ingeniero de software con conocimientos en Python y Django.',
-      datePosted: new Date(),
-      url: 'https://example.com/job2',
-      salary: '3500',
-      type: 'Full-time',
-      id: 2
-    },
-    {
-      title: 'Ingeniero de Software',
-      company: 'Innovatech',
-      location: 'Barcelona, España',
-      description: 'Se requiere ingeniero de software con conocimientos en Python y Django.',
-      datePosted: new Date(),
-      url: 'https://example.com/job2',
-      salary: '3500',
-      type: 'Full-time',
-      id: 2
-    },
-    {
-      title: 'Ingeniero de Software',
-      company: 'Innovatech',
-      location: 'Barcelona, España',
-      description: 'Se requiere ingeniero de software con conocimientos en Python y Django.',
-      datePosted: new Date(),
-      url: 'https://example.com/job2',
-      salary: '3500',
-      type: 'Full-time',
-      id: 2
-    },
-    {
-      title: 'Ingeniero de Software',
-      company: 'Innovatech',
-      location: 'Barcelona, España',
-      description: 'Se requiere ingeniero de software con conocimientos en Python y Django.',
-      datePosted: new Date(),
-      url: 'https://example.com/job2',
-      salary: '3500',
-      type: 'Full-time',
-      id: 2
-    },
-    {
-      title: 'Ingeniero de Software',
-      company: 'Innovatech',
-      location: 'Barcelona, España',
-      description: 'Se requiere ingeniero de software con conocimientos en Python y Django.',
-      datePosted: new Date(),
-      url: 'https://example.com/job2',
-      salary: '3500',
-      type: 'Full-time',
-      id: 2
-    }
   ]);
 
   selectedJob?: Job;
@@ -125,7 +26,6 @@ export class Search implements OnInit {
   //   type: 'Full-time',
   //   id: 0
   // }; // Variable to hold the selected job
-  text = signal(''); // Signal to hold the search text
 
   service= inject(JobService);
 
@@ -138,7 +38,7 @@ export class Search implements OnInit {
     this.search()
   }
 
-  search(){
+  search(text: string = '') {
     this.service.getJobs().subscribe((jobs: any) => {
       console.log('Jobs fetched:', jobs);
       this.jobs.set(jobs["data"]);

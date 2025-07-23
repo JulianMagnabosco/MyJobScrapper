@@ -1,9 +1,10 @@
 import { Component, signal } from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import { SearchBar } from "../search-bar/search-bar";
 
 @Component({
   selector: 'app-settings',
-  imports: [FormsModule],
+  imports: [FormsModule, SearchBar],
   templateUrl: './settings.html',
   styleUrl: './settings.css'
 })
@@ -12,10 +13,9 @@ export class Settings {
     { url: '/settings/general' },  
   ]);
 
-  text = '';
 
-  addUrl() {
-    this.urls.update(urls => [...urls, { url: this.text }]);
+  addUrl(text: string) {
+    this.urls.update(urls => [...urls, { url: text }]);
   }
 
   removeItem(index: number) {

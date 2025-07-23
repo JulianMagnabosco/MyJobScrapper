@@ -1,18 +1,17 @@
-<div class="bg-gray-200 rounded-xl text-white p-4 flex items-center justify-between *:p-2">
-  
-  <input class="w-full bg-white text-black rounded-l-lg border border-black" type="text" name="link" placeholder="" [(ngModel)]="text">
-  <button class="bg-blue-950 rounded-r-lg hover:brightness-125 active:brightness-50 cursor-pointer" (click)="addUrl()" aria-label="Add URL">
-    Cargar
-  </button>
-</div>
+<div class="container mx-auto p-4">
+  <app-search-bar (action)="addUrl($event)" nameAction="Agregar"></app-search-bar>
 
-<div>
-  @for (item of urls(); track $index) {
-    <div class="bg-gray-100 rounded-lg p-2 mb-2 flex items-center justify-between">
-      <span class="text-black">{{ item.url }}</span>
-      <button class="bg-red-500 text-white rounded-lg px-2 hover:bg-red-600 active:bg-red-700 cursor-pointer" (click)="removeItem($index)">
+  <div class="mt-6">
+    @for (item of urls(); track $index) {
+    <div class="bg-gray-100 rounded-lg p-2 space-x-1 mb-2 flex items-center justify-start">
+      <button class="bg-red-500 text-white rounded-lg px-2 hover:bg-red-600 active:bg-red-700 cursor-pointer"
+        (click)="removeItem($index)">
         Eliminar
       </button>
+      <span class="text-black">{{ item.url }}</span>
+
     </div>
-  }
+    }
+  </div>
+
 </div>
