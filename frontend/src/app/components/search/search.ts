@@ -38,6 +38,22 @@ export class Search implements OnInit {
     this.search()
   }
 
+  hide(){
+    if (!this.selectedJob) return;
+    this.service.hideJob(this.selectedJob._id.$oid).subscribe({
+      next: (data) => {
+        console.log('Job hidden:', data);
+        this.selectedJob = undefined; // Clear the selected job after hiding
+        this.jobs.update(jobs => jobs.map(job => 
+          job._id.$oid === this.selectedJob?._id.$oid ? {...job, hidden: true} : job
+        )); // Update the jobs list to reflect the hidden status
+      },
+      error: (error) => {
+        console.error('Error hiding job:', error);
+      }
+    });
+  }
+
   search(text: string = '') {
     this.service.getJobs().subscribe((jobs: any) => {
       console.log('Jobs fetched:', jobs);

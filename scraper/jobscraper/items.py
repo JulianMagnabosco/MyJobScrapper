@@ -18,4 +18,4 @@ class JobData(scrapy.Item):
     salary = scrapy.Field()
     
     type = scrapy.Field()
-    pass
+    hidden = scrapy.Field(default=False)  # Field to mark if the job is hidden
