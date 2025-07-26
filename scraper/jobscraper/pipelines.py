@@ -27,6 +27,7 @@ class MongoPipeline:
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
         self.db[self.collection_name].create_index("id", unique=True)
+        self.db[self.collection_name].create_index("text")
 
 
     def close_spider(self, spider):

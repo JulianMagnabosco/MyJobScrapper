@@ -11,19 +11,28 @@ export class JobService {
   url = environment.API_URL; // Replace with your actual API endpoint
   httpClient=inject(HttpClient);
 
-  getJobs() {
-    return this.httpClient.get<Job>(this.url+'/jobs');
+  getJobs(params: any) {
+    return this.httpClient.get<Job>(this.url+'/jobs',{
+      params: params
+    });
   }
 
   hideJob(id: string) {
     return this.httpClient.put<any>(this.url + '/hide/' + id,{});
   }
   
-  rechargeDatabase(data: any) {
-    return this.httpClient.post<any>(this.url + '/update', data);
+  deleteJob(id: string) {
+    return this.httpClient.delete<any>(this.url + '/jobs/' + id);
+  }
+  
+  crawl(data: any) {
+    return this.httpClient.post<any>(this.url + '/crawl', data);
   }
 
   
+  getSpiders() {
+    return this.httpClient.get<any>(this.url+'/spiders');
+  }
   
   getUrls() {
     return this.httpClient.get<any>(this.url+'/urls');

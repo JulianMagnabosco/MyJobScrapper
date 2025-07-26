@@ -1,7 +1,24 @@
-<div class="bg-gray-200 rounded-xl text-white p-4 flex items-center justify-between *:p-2">
-  
-  <input class="w-full bg-white text-black rounded-l-lg " type="text" name="text" placeholder="" [(ngModel)]="text">
-  <button class="bg-blue-950 rounded-r-lg hover:brightness-125 active:brightness-50 cursor-pointer" (click)="click()"  aria-label="Search">
-    {{nameAction()}}
-  </button>
+<div class="bg-gray-200 rounded-xl text-white p-4">
+
+  <div class="mb-1 flex items-center justify-between *:p-2">
+    <input class="w-full bg-white text-black rounded-l-lg " type="text" name="text" placeholder="" [(ngModel)]="text">
+    <button class="bg-blue-950 rounded-r-lg hover:brightness-125 active:brightness-50 cursor-pointer" (click)="click()"
+      aria-label="Search">
+      Buscar
+    </button>
+  </div>
+
+  <div class="flex gap-2 *:bg-blue-950 *:rounded-lg *:hover:brightness-125 *:active:brightness-50 *:p-2">
+    <select name="type" id="type" [(ngModel)]="type">
+      <option value="Hibrido">Hibrido</option>
+      <option value="Remoto">Remoto</option>
+      <option value="Presencial">Presencial</option>
+      <option selected value="">Todas las opciones</option>
+    </select>
+    <select name="location" id="location" [(ngModel)]="location">
+      <option value="córdoba">Cordoba</option>
+      <option value="argentina">Argentina</option>
+      <option selected value="">Todas las locaciones</option>
+    </select>
+  </div>
 </div>

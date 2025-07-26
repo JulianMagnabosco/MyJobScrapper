@@ -10,6 +10,7 @@ from scrapy.crawler import CrawlerRunner
 from scrapy.utils.project import get_project_settings
 from scrapy.utils.log import configure_logging
 from jobscraper.spiders import spider1,spidertest
+from scrapy import spiderloader
 
 import pymongo
 from bson import ObjectId
@@ -22,11 +23,14 @@ client = pymongo.MongoClient(MONGO_URI)
 app = Flask('Scrape With Flask')
 CORS(app)
 
-# configure_logging()
+configure_logging()
 settings = get_project_settings()
 settings.set("TWISTED_REACTOR", "twisted.internet.selectreactor.SelectReactor")
     
 scrape_in_progress = False
+
+spiders = spiderloader.SpiderLoader.from_settings(settings).list()
+print("Available spiders:", spiders)
 
 @app.route('/urls', methods=['GET'])
 def urls():
@@ -73,7 +77,7 @@ def status():
 @app.route('/crawl', methods=['POST'])
 def crawl():
     global scrape_in_progress
-    data = request.json["urls"]
+    data = request.json
     print("Crawl request received with data:", data)
     urls = data["urls"]
 
@@ -81,7 +85,7 @@ def crawl():
     code_response = 1
     if not scrape_in_progress:
         scrape_in_progress = True
-        # scrape_with_crochet(urls)
+        scrape_with_crochet(urls)
         response = 'SCRAPING'
         code_response = 1
     else:
@@ -92,24 +96,58 @@ def crawl():
 
 @app.route('/jobs', methods=['GET'])
 def get_results():
-    results = {"data": list(client[MONGO_DATABASE].jobs.find())}
+    data = dict()
+    if request.args.get('search'):
+        data["$text"] = {"$search": request.args.get('search')}
 
+    if request.args.get('type'):
+        data["type"] = request.args.get('type')
+
+    if request.args.get('location'):
+        data["location"] = {"$regex": f"{request.args.get('location')}", "$options": "i"}
+        
+    results = {
+        "data": list(client[MONGO_DATABASE].jobs.find(data))
+        } 
     return json_responce(200, results)
 
 @app.route('/hide/<string:id>', methods=['PUT'])
 def hide_job(id):
+    try:
+        oid = ObjectId(id)
+    except Exception as e:
+        return json_responce(400,{"error": "ID inválido"})
     client[MONGO_DATABASE].jobs.find_one_and_update(
-        {'_id': id},
+        {'_id': oid},
         [{'$set': {'hidden': {'$not': '$hidden'}}}]
     )
 
     return json_responce(200, {"status": "TOGGLED"})
 
+@app.route('/jobs/<string:id>', methods=['DELETE'])
+def delete_job(id):
+    try:
+        oid = ObjectId(id)
+    except Exception as e:
+        return json_responce(400,{"error": "ID inválido"})
+    client[MONGO_DATABASE].jobs.delete_one(
+        {'_id': oid}
+    )
+
+    return json_responce(200, {"status": "TOGGLED"})
+
+@app.route('/spiders', methods=['GET'])
+def get_spiders():
+    global spiders
+    return json_responce(200, {"spiders": spiders})
+
 @crochet.run_in_reactor
-def scrape_with_crochet(start_urls):
+def scrape_with_crochet(urls=[]):
     runner = CrawlerRunner(settings=settings)
-    eventual = runner.crawl(spider1.Spider1,start_urls=start_urls)
-    eventual.addCallback(finished_scrape)
+
+    for url in urls:
+        eventual = runner.crawl(url["spider"],new_urls=url["path"])
+        eventual.addCallback(finished_scrape)
 
 def finished_scrape(null):
     global scrape_in_progress
@@ -120,8 +158,7 @@ def json_responce(status, data):
     return app.response_class(
         response=dumps(data),
         status=status,
-        mimetype='application/json',
-        headers={'Access-Control-Allow-Origin':'*'}
+        mimetype='application/json'
     )
 
 if __name__=='__main__':

@@ -11,12 +11,20 @@ export class SearchBar {
 
   text = ''; // Signal to hold the search text
 
+  type = '';
+  
+  location = '';
+
   nameAction = input<string>(''); // Input to hold the action name
 
-  action = output<string>();
+  action = output<any>();
 
   click(){
-    this.action.emit(this.text);
-    this.text= ''; // Clear the input after emitting the action
+    const data = {
+      search: this.text,
+      type: this.type,
+      location: this.location
+    };
+    this.action.emit(data);
   }
 }

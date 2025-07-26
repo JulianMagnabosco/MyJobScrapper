@@ -35,7 +35,7 @@ export class Search implements OnInit {
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    this.search()
+    this.search({}); // Initial search with empty parameters
   }
 
   hide(){
@@ -43,10 +43,10 @@ export class Search implements OnInit {
     this.service.hideJob(this.selectedJob._id.$oid).subscribe({
       next: (data) => {
         console.log('Job hidden:', data);
-        this.selectedJob = undefined; // Clear the selected job after hiding
         this.jobs.update(jobs => jobs.map(job => 
           job._id.$oid === this.selectedJob?._id.$oid ? {...job, hidden: true} : job
         )); // Update the jobs list to reflect the hidden status
+        this.selectedJob = undefined; // Clear the selected job after hiding
       },
       error: (error) => {
         console.error('Error hiding job:', error);
@@ -54,8 +54,25 @@ export class Search implements OnInit {
     });
   }
 
-  search(text: string = '') {
-    this.service.getJobs().subscribe((jobs: any) => {
+  deleteJob(){
+    if (!confirm('Are you sure you want to delete this job?')) {
+      return; // Exit if the user cancels the deletion
+    }
+    this.service.deleteJob(this.selectedJob?._id.$oid).subscribe({
+      next: (data) => {
+        console.log('Job deleted:', data);
+        this.jobs.update(jobs => jobs.filter(job => job._id.$oid !== this.selectedJob?._id.$oid)); 
+        this.selectedJob = undefined; // Clear the selected job after deletion
+      }
+      , error: (error) => {
+        console.error('Error deleting job:', error);
+      }
+    });
+
+  }
+
+  search(data: any) {
+    this.service.getJobs(data).subscribe((jobs: any) => {
       console.log('Jobs fetched:', jobs);
       this.jobs.set(jobs["data"]);
     });
