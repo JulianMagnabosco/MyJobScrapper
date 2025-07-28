@@ -3,6 +3,7 @@ import { SearchBar } from "../search-bar/search-bar";
 import { List } from "../list/list";
 import { Job } from '../../models/job';
 import { JobService } from '../../services/job-service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-search',
@@ -14,7 +15,8 @@ export class Search implements OnInit {
   jobs = signal<Job[]>([
   ]);
 
-  selectedJob?: Job;
+  selectedJob = signal<Job | undefined>(undefined); // Signal to hold the selected job
+
   // selectedJob?: Job = {
   //   title: 'Titulo del trabajo',
   //   company: 'comañia',
@@ -30,8 +32,8 @@ export class Search implements OnInit {
   service= inject(JobService);
 
   selectJob(job: Job) {
-    this.selectedJob = job; // Set the selected job when a job is clicked
-  }
+    this.selectedJob.set(job); // Set the selected job when a job is clicked
+   }
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -40,13 +42,13 @@ export class Search implements OnInit {
 
   hide(){
     if (!this.selectedJob) return;
-    this.service.hideJob(this.selectedJob._id.$oid).subscribe({
+    this.service.hideJob(this.selectedJob()?._id.$oid).subscribe({
       next: (data) => {
         console.log('Job hidden:', data);
         this.jobs.update(jobs => jobs.map(job => 
-          job._id.$oid === this.selectedJob?._id.$oid ? {...job, hidden: true} : job
+          job._id.$oid === this.selectedJob()?._id.$oid ? {...job, hidden: true} : job
         )); // Update the jobs list to reflect the hidden status
-        this.selectedJob = undefined; // Clear the selected job after hiding
+        this.selectedJob.set(undefined); // Clear the selected job after hiding
       },
       error: (error) => {
         console.error('Error hiding job:', error);
@@ -58,11 +60,11 @@ export class Search implements OnInit {
     if (!confirm('Are you sure you want to delete this job?')) {
       return; // Exit if the user cancels the deletion
     }
-    this.service.deleteJob(this.selectedJob?._id.$oid).subscribe({
+    this.service.deleteJob(this.selectedJob()?._id.$oid).subscribe({
       next: (data) => {
         console.log('Job deleted:', data);
-        this.jobs.update(jobs => jobs.filter(job => job._id.$oid !== this.selectedJob?._id.$oid)); 
-        this.selectedJob = undefined; // Clear the selected job after deletion
+        this.jobs.update(jobs => jobs.filter(job => job._id.$oid !== this.selectedJob()?._id.$oid)); 
+        this.selectedJob.set(undefined); // Clear the selected job after deletion
       }
       , error: (error) => {
         console.error('Error deleting job:', error);

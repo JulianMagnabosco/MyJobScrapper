@@ -28,6 +28,7 @@ export class Settings implements OnInit {
     this.service.getSpiders().subscribe({
       next: (data) => {
         this.spiders.set(data.spiders);
+        this.spiderSelected= this.spiders().length > 0 ? this.spiders()[0] : ''; // Set the first spider as default if available
       }
     })
   }
@@ -50,6 +51,7 @@ export class Settings implements OnInit {
     this.service.addUrl(data).subscribe({
       next: (data:any) => {
         this.urls.update(urls => [...urls, data["object"]]);
+        this.text = ''; // Clear the input field after adding
       }
     })
 

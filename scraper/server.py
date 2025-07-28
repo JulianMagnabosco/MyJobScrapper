@@ -23,8 +23,8 @@ client = pymongo.MongoClient(MONGO_URI)
 app = Flask('Scrape With Flask')
 CORS(app)
 
-configure_logging()
 settings = get_project_settings()
+configure_logging(settings)
 settings.set("TWISTED_REACTOR", "twisted.internet.selectreactor.SelectReactor")
     
 scrape_in_progress = False

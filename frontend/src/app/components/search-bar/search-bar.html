@@ -1,14 +1,14 @@
-<div class="bg-gray-200 rounded-xl text-white p-4">
+<form class="bg-gray-200 rounded-xl text-white p-4"  (ngSubmit)="click()">
 
   <div class="mb-1 flex items-center justify-between *:p-2">
     <input class="w-full bg-white text-black rounded-l-lg " type="text" name="text" placeholder="" [(ngModel)]="text">
-    <button class="bg-blue-950 rounded-r-lg hover:brightness-125 active:brightness-50 cursor-pointer" (click)="click()"
-      aria-label="Search">
+    <button class="bg-blue-950 rounded-r-lg hover:brightness-125 active:brightness-50 cursor-pointer"
+      aria-label="Search" type="submit">
       Buscar
     </button>
   </div>
 
-  <div class="flex gap-2 *:bg-blue-950 *:rounded-lg *:hover:brightness-125 *:active:brightness-50 *:p-2">
+  <div class="flex justify-center gap-2 *:bg-blue-950 *:rounded-lg *:hover:brightness-125 *:active:brightness-50 *:p-2">
     <select name="type" id="type" [(ngModel)]="type">
       <option value="Hibrido">Hibrido</option>
       <option value="Remoto">Remoto</option>
@@ -21,4 +21,4 @@
       <option selected value="">Todas las locaciones</option>
     </select>
   </div>
-</div>
+</form>
