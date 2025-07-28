@@ -15,6 +15,8 @@ export class Settings implements OnInit {
   ]);
   service= inject(JobService);
 
+  state = signal<'running'|'stop'>('stop'); // Signal to hold the state of the component
+
   spiders = signal<string[]>([]);
   spiderSelected = ''; // Variable to hold the selected spider
   text = ''; // Signal to hold the input text for adding URLs
@@ -40,7 +42,16 @@ export class Settings implements OnInit {
     const data = { urls: this.urls() };
     this.service.crawl(data).subscribe({
       next: (data:any) => {
+        this.state.set('running');
         console.log('Database updated:', data);
+      }
+    });
+  }
+
+  checkCrawl() {
+    this.service.checkCrawl().subscribe({
+      next: (data:any) => {
+        this.state.set(data.code === 2 ? 'running' : 'stop');
       }
     });
   }

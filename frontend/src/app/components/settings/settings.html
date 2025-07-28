@@ -1,4 +1,7 @@
 <div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">
+    Direcciones a rastrear
+  </h1>
   <div class="bg-gray-200 rounded-xl text-white p-4 flex items-center justify-between *:p-2">
     <select class="bg-cyan-600 rounded-l-lg" name="spider" id="spider" [(ngModel)]="spiderSelected">
       @for (item of spiders(); track $index) {
@@ -11,8 +14,13 @@
       (click)="addUrl()">
       Agregar
     </button>
+    <button class="ms-2 rounded-lg hover:brightness-75 active:brightness-50 cursor-pointer"
+     (click)="checkCrawl()" [class]="state() !== 'running' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'">
+      {{state() === 'running' ? 'En curso' : 'Detenido'}}
+      
+    </button>
     <button class="ms-2 bg-blue-500 rounded-lg hover:brightness-125 active:brightness-50 cursor-pointer"
-      (click)="crawl()">
+      (click)="crawl()" [disabled]="state() === 'running'">
       Generar
     </button>
   </div>

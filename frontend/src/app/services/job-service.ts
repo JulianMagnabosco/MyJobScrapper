@@ -28,6 +28,10 @@ export class JobService {
   crawl(data: any) {
     return this.httpClient.post<any>(this.url + '/crawl', data);
   }
+  checkCrawl() {
+    return this.httpClient.get<any>(this.url + '/status');
+  }
+
 
   
   getSpiders() {
