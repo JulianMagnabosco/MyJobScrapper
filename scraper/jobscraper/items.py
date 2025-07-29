@@ -19,3 +19,4 @@ class JobData(scrapy.Item):
     
     type = scrapy.Field()
     hidden = scrapy.Field(default=False)  # Field to mark if the job is hidden
+    spider = scrapy.Field()  # Field to store the spider name

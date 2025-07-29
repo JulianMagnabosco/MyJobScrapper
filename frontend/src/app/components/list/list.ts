@@ -1,9 +1,10 @@
 import { Component, input, output } from '@angular/core';
 import { Job } from '../../models/job';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-list',
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './list.html',
   styleUrl: './list.css'
 })

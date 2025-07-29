@@ -14,7 +14,7 @@
       (click)="addUrl()">
       Agregar
     </button>
-    <button class="ms-2 rounded-lg hover:brightness-75 active:brightness-50 cursor-pointer"
+    <button class="ms-2 text-nowrap rounded-lg hover:brightness-75 active:brightness-50 cursor-pointer"
      (click)="checkCrawl()" [class]="state() !== 'running' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'">
       {{state() === 'running' ? 'En curso' : 'Detenido'}}
       

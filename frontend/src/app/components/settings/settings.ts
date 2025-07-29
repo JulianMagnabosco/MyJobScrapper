@@ -33,6 +33,7 @@ export class Settings implements OnInit {
         this.spiderSelected= this.spiders().length > 0 ? this.spiders()[0] : ''; // Set the first spider as default if available
       }
     })
+    this.checkCrawl();
   }
 
   crawl(){

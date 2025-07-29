@@ -37,7 +37,7 @@ class MongoPipeline:
         item = ItemAdapter(item).asdict()
         self.db[self.collection_name].update_one(
             {"id": item["id"]},                      # condición de existencia
-            {"$setOnInsert": item},                  # datos a insertar solo si no existe
+            {"$set": item},                  # datos a insertar solo si no existe
             upsert=True
         )
         return item
